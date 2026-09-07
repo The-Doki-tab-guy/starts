@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aternos Server Control</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .container { 
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 168, 255, 0.2);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+        }
+        h1 { margin-bottom: 10px; font-size: 32px; }
+        .subtitle { color: #aaa; margin-bottom: 30px; }
+        button { 
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00a8ff, #0080cc);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+        }
+        button:hover:not(:disabled) { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 168, 255, 0.6);
+        }
+        button:disabled { 
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        #status { 
+            margin-top: 20px;
+            font-size: 16px;
+            min-height: 24px;
+            animation: fadeIn 0.3s;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff4444; }
+        .loading { color: #00a8ff; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Aternos Server</h1>
+        <p class="subtitle">Click to start your server</p>
+        <button id="startBtn" onclick="startServer()">START SERVER</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function startServer() {
+            const btn = document.getElementById('startBtn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            status.textContent = '⏳ Starting server...';
+            status.className = 'loading';
+            
+            try {
+                const response = await fetch('/api/start', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    status.textContent = '✅ ' + data.message;
+                    status.className = 'success';
+                } else {
+                    status.textContent = '❌ ' + (data.error || 'Unknown error');
+                    status.className = 'error';
+                }
+            } catch (error) {
+                status.textContent = '❌ ' + error.message;
+                status.className = 'error';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
