@@ -50,7 +50,7 @@ A simple web interface to start your Aternos Minecraft server with one click.
 3. **Configure Build & Deploy**
    - **Build Command:**
      ```
-     pip install -r requirements.txt && apt-get update && apt-get install -y chromium-browser
+     pip install -r requirements.txt
      ```
    - **Start Command:**
      ```
